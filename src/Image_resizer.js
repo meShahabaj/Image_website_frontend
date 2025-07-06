@@ -36,7 +36,7 @@ const Image_resizer = ()=> {
     formData.append("width", width);
 
     try {
-      const response = await fetch('http://localhost:5000/upload', {
+      const response = await fetch('https://image-website-backend.onrender.com//upload', {
         method: 'POST',
         body: formData,
       });
