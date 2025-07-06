@@ -1,10 +1,9 @@
-import  { useState } from 'react';
-import styles from "./Image_resizer.module.css";
+import { useState } from 'react';
+import Header from './header';
 
-
-const Image_resizer = ()=> {
+const Image_resizer = () => {
   const [image, setImage] = useState(null);
-  const [preview, setPreview] = useState(null); 
+  const [preview, setPreview] = useState(null);
   const [resizedURL, setResizedURL] = useState(null);
   const [height, setHeight] = useState(0);
   const [width, setWidth] = useState(0);
@@ -15,7 +14,7 @@ const Image_resizer = ()=> {
     if (file) {
       const img_url = URL.createObjectURL(file);
       const img = new window.Image();
-      img.onload = ()=>{
+      img.onload = () => {
         setRatio(img.width / img.height)
         setHeight(img.height)
         setWidth(img.width)
@@ -36,7 +35,7 @@ const Image_resizer = ()=> {
     formData.append("width", width);
 
     try {
-      const response = await fetch('https://image-website-backend.onrender.com//upload', {
+      const response = await fetch('http://127.0.0.1:5000//upload', {
         method: 'POST',
         body: formData,
       });
@@ -53,51 +52,57 @@ const Image_resizer = ()=> {
     }
   };
 
-  const changeHeight=(e)=>{
+  const changeHeight = (e) => {
     setHeight(e.target.value);
     setWidth(e.target.value * ratio);
   }
 
-  const changeWidth=(e)=>{
+  const changeWidth = (e) => {
     setWidth(e.target.value);
     setHeight(e.target.value / ratio);
   }
 
   return (
-    <div className={styles.container}>
-        <h2>Upload and Resize Image</h2>
+    <div style={{ textAlign: "center" }}>
+      <Header />
+      <div style={{ display: "flex", flexDirection: "column", padding: "1px 15px", display: "flex", alignItems: "center" }}>
+        <h2 style={{ alignItems: "center", display: "flex", justifyContent: "center" }}>Upload and Resize Image</h2>
 
-        <input type="file" accept="image/*" onChange={handleFileChange} />
+        <input style={{ alignItems: "center", display: "flex", justifyContent: "center" }} type="file" accept="image/*" onChange={handleFileChange} />
 
-        <div className={styles.inputRow}>
-            <p>Height</p>
-            <input type="number" value={height} onChange={changeHeight} />
-            <p>Width</p>
-            <input type="number" value={width} onChange={changeWidth} />
+        <div style={{ display: "flex", alignItems: "center", justifyContent: "center" }}>
+          <p>Height</p>
+          <input type="number" value={height} onChange={changeHeight} />
+          <p>Width</p>
+          <input type="number" value={width} onChange={changeWidth} />
         </div>
 
-        <button onClick={handleUpload}>Upload and Resize</button>
+        <button onClick={handleUpload}>Resize</button>
 
-        <div className={styles.preview}>{preview && (
-            <div>
-            <h4>Original Preview:</h4>
-            <img src={preview} alt="Original" className={styles.previewImg} />
+        <div style={{ display: "flex" }}>
+          {preview && (
+            <div style={{ flex: 1 }}>
+              <h4>Original Preview:</h4>
+              <img style={{ width: "50%" }} src={preview} alt="Original" />
             </div>
-        )}
+          )}
 
-        {resizedURL && (
-            <div className={styles.result}>
-            <h4>Resized Image:</h4>
-            <img src={resizedURL} alt="Resized"  />
-            
+          {resizedURL && (<>
+            <div style={{ flex: 1 }}>
+              <h4>Resized Image:</h4>
+              <img style={{ width: "50%" }} src={resizedURL} alt="Resized" />
+
+
             </div>
-        )}
-        </div>
-        <a href={resizedURL} download="resized_image.jpg">
-                <button>Download Resized Image</button>
-            </a>
+            <a href={resizedURL} download="resized_image.jpg">
+              <button style={{ color: "white", background: "Black", padding: "10px" }}>Download Resized Image</button>
+            </a></>
+          )}
         </div>
 
+      </div>
+
+    </div>
   );
 }
 
