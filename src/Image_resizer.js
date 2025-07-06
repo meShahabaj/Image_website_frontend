@@ -15,13 +15,13 @@ const Image_resizer = () => {
       const img_url = URL.createObjectURL(file);
       const img = new window.Image();
       img.onload = () => {
-        setRatio(img.width / img.height)
-        setHeight(img.height)
-        setWidth(img.width)
-      }
+        setRatio(img.width / img.height);
+        setHeight(img.height);
+        setWidth(img.width);
+      };
       img.src = img_url;
       setImage(file);
-      setPreview(URL.createObjectURL(file));
+      setPreview(img_url);
       setResizedURL(null); // reset old result
     }
   };
@@ -31,8 +31,8 @@ const Image_resizer = () => {
 
     const formData = new FormData();
     formData.append('image', image);
-    formData.append("height", height);
-    formData.append("width", width);
+    formData.append('height', height);
+    formData.append('width', width);
 
     try {
       const response = await fetch('http://127.0.0.1:5000//upload', {
@@ -40,9 +40,7 @@ const Image_resizer = () => {
         body: formData,
       });
 
-      if (!response.ok) {
-        throw new Error('Upload failed');
-      }
+      if (!response.ok) throw new Error('Upload failed');
 
       const blob = await response.blob();
       const url = URL.createObjectURL(blob);
@@ -53,57 +51,68 @@ const Image_resizer = () => {
   };
 
   const changeHeight = (e) => {
-    setHeight(e.target.value);
-    setWidth(e.target.value * ratio);
-  }
+    const h = parseInt(e.target.value);
+    setHeight(h);
+    setWidth(Math.round(h * ratio));
+  };
 
   const changeWidth = (e) => {
-    setWidth(e.target.value);
-    setHeight(e.target.value / ratio);
-  }
+    const w = parseInt(e.target.value);
+    setWidth(w);
+    setHeight(Math.round(w / ratio));
+  };
 
   return (
-    <div style={{ textAlign: "center" }}>
+    <div style={{ textAlign: 'center' }}>
       <Header />
-      <div style={{ display: "flex", flexDirection: "column", padding: "1px 15px", display: "flex", alignItems: "center" }}>
-        <h2 style={{ alignItems: "center", display: "flex", justifyContent: "center" }}>Upload and Resize Image</h2>
+      <div style={{ display: 'flex', flexDirection: 'column', padding: '15px', alignItems: 'center' }}>
+        <h2>Upload and Resize Image</h2>
 
-        <input style={{ alignItems: "center", display: "flex", justifyContent: "center" }} type="file" accept="image/*" onChange={handleFileChange} />
+        <input type="file" accept="image/*" onChange={handleFileChange} />
 
-        <div style={{ display: "flex", alignItems: "center", justifyContent: "center" }}>
-          <p>Height</p>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '10px', margin: '15px 0' }}>
+          <label>Height</label>
           <input type="number" value={height} onChange={changeHeight} />
-          <p>Width</p>
+          <label>Width</label>
           <input type="number" value={width} onChange={changeWidth} />
         </div>
 
-        <button onClick={handleUpload}>Resize</button>
+        <button onClick={handleUpload} style={{ padding: '10px 20px', marginBottom: '20px' }}>
+          Resize
+        </button>
 
-        <div style={{ display: "flex" }}>
+        <div style={{ display: 'flex', gap: '40px', justifyContent: 'center', flexWrap: 'wrap' }}>
           {preview && (
-            <div style={{ flex: 1 }}>
+            <div>
               <h4>Original Preview:</h4>
-              <img style={{ width: "50%" }} src={preview} alt="Original" />
+              <img style={{ width: '200px' }} src={preview} alt="Original" />
             </div>
           )}
 
-          {resizedURL && (<>
-            <div style={{ flex: 1 }}>
+          {resizedURL && (
+            <div>
               <h4>Resized Image:</h4>
-              <img style={{ width: "50%" }} src={resizedURL} alt="Resized" />
-
-
+              <img style={{ width: '200px' }} src={resizedURL} alt="Resized" />
+              <br />
+              <a href={resizedURL} download="resized_image.jpg">
+                <button style={{
+                  background: 'black',
+                  color: 'white',
+                  padding: '10px 20px',
+                  border: 'none',
+                  borderRadius: '5px',
+                  marginTop: '10px',
+                  cursor: 'pointer'
+                }}>
+                  Download Resized Image
+                </button>
+              </a>
             </div>
-            <a href={resizedURL} download="resized_image.jpg">
-              <button style={{ color: "white", background: "Black", padding: "10px" }}>Download Resized Image</button>
-            </a></>
           )}
         </div>
-
       </div>
-
     </div>
   );
-}
+};
 
 export default Image_resizer;
