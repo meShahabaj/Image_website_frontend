@@ -8,6 +8,7 @@ const Image_resizer = () => {
   const [height, setHeight] = useState(0);
   const [width, setWidth] = useState(0);
   const [ratio, setRatio] = useState(1);
+  const [blur, setBlur] = useState(1);
 
   const handleFileChange = (e) => {
     const file = e.target.files[0];
@@ -33,6 +34,7 @@ const Image_resizer = () => {
     formData.append('image', image);
     formData.append('height', height);
     formData.append('width', width);
+    formData.append("blur", blur);
 
     try {
       const response = await fetch('http://127.0.0.1:5000//upload', {
@@ -75,6 +77,8 @@ const Image_resizer = () => {
           <input type="number" value={height} onChange={changeHeight} />
           <label>Width</label>
           <input type="number" value={width} onChange={changeWidth} />
+          <label>Blur</label>
+          <input type="number" value={blur} onChange={(e)=>{setBlur(e.target.value)}}/>
         </div>
 
         <button onClick={handleUpload} style={{ padding: '10px 20px', marginBottom: '20px' }}>
