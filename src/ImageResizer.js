@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import Header from './header';
 
-const Image_resizer = () => {
+const ImageResizer = () => {
   const [image, setImage] = useState(null);
   const [preview, setPreview] = useState(null);
   const [resizedURL, setResizedURL] = useState(null);
@@ -119,4 +119,4 @@ const Image_resizer = () => {
   );
 };
 
-export default Image_resizer;
+export default ImageResizer;

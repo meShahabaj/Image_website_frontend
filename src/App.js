@@ -1,11 +1,11 @@
 import {BrowserRouter as Router, Routes, Route} from "react-router-dom";
-import Image_resizer from "./Image_resizer";
+import ImageResizer from "./ImageResizer";
 
 function App(){
   return (
     <Router>
       <Routes>
-        <Route path="/" element={<Image_resizer/>} />
+        <Route path="/" element={<ImageResizer/>} />
       </Routes>
     </Router>
   )
